@@ -1,18 +1,28 @@
 apiVersion: automation.cloudbees.io/v1alpha1
 kind: workflow
-name: test
+name: ci
 on:
   push:
     branches:
-      - main
+      - "**"
   workflow_dispatch:
 jobs:
-  azure-repoclone:
+  test:
     steps:
-      - name: Checkout AZDO Repo
+      - name: Checkout source from AZDO repo
         uses: cb-demos/azdo-scm-checkout@v1
         with:
           org-name: ${{ vars.AZDO_ORG }}
           repo-name: ${{ vars.REPO_NAME }}
           project-name: ${{ vars.PROJECT_NAME }}
           access-token: ${{ secrets.AZURE_PERSONAL_ACCESS_TOKEN }}
+      - name: Run unit tests
+        id: unit-tests
+        uses: docker://maven:3-eclipse-temurin-17
+        run: |
+          mvn test
+      - uses: cloudbees-io/publish-test-results@v1
+        kind: test
+        with:
+          test-type: JUnit
+          folder-name: /cloudbees/workspace/target/surefire-reports/*.xml
