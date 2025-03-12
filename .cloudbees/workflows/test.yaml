@@ -20,6 +20,7 @@ jobs:
         id: unit-tests
         uses: docker://maven:3-eclipse-temurin-17
         run: |
+          ls
           mvn test
       - uses: cloudbees-io/publish-test-results@v1
         kind: test
