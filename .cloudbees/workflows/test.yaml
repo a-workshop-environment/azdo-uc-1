@@ -1,0 +1,16 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: test
+on:
+  push:
+    branches:
+      - main
+jobs:
+  azure-repoclone:
+    steps:
+      - name: Checkout AZDO Repo
+        uses: cb-demos/azdo-scm-checkout@v1
+        with:
+          org-name: ${{ vars.AZDO_ORG }}
+          repo-name: ${{ vars.REPO_NAME }}
+          access-token: ${{ secrets.AZURE_PERSONAL_ACCESS_TOKEN }}
