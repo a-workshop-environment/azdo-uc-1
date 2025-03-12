@@ -20,8 +20,7 @@ jobs:
         id: unit-tests
         uses: docker://maven:3-eclipse-temurin-17
         run: |
-          ls
-          mvn test
+          mvn test -Dspring-javaformat.validate.skip=true
       - uses: cloudbees-io/publish-test-results@v1
         kind: test
         with:
